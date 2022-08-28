@@ -8,16 +8,31 @@ class DSAJournal():
     def __init__(self):
         self.head = None
         self.tail = None
+        self.count = 0
+        self.curPage = None
+
         
     def __str__(self):
         
-        return (str(self.pageNum) + str(self.content))
+        result = ""
+
+        curPage = self.head
+        while curPage is not None:
+            result += str(curPage.content) + "-->"
+            curPage = curPage.pointer
+        
+        print()
+        return result
+
+
+    def getCount(self):
+        return self.count
 
 
     def display(self):
         curPage = self.head
         while curPage is not None:
-            print(curPage.pageNum, end = "-->")
+            print(curPage.content, end = "-->")
             curPage = curPage.pointer
         print()
 
@@ -51,12 +66,14 @@ class DSAJournal():
     def insertFirstPage(self, pageNum, title, author, info):
         if self.isEmpty():
             self.head = DSANode(pageNum, title, author, info)
+
         else:
             newPage = DSANode(pageNum, title, author, info)
             newPage.pointer = self.head
             if self.head is not None:
                 self.head.previous = newPage
             self.head = newPage
+            self.count += 1
             
             
 
@@ -73,6 +90,7 @@ class DSAJournal():
                 lastPage = lastPage.pointer
             lastPage.pointer = newPage
             newPage.previous = lastPage
+        self.count += 1
          
     
     def insertGivenPage(self, prePage, newData, title, author, info):
@@ -95,6 +113,8 @@ class DSAJournal():
         if newPage.pointer is not None:
                 newPage.pointer.previous = newPage
 
+        self.count += 1
+
 
     def peekFirst(self):
         return self.head.pageNum
@@ -111,6 +131,7 @@ class DSAJournal():
         else:
             delPage = self.head.pageNum
             self.head = self.head.pointer
+            self.count -= 1
         return delPage
 
     def removeLastPage(self):
@@ -128,6 +149,13 @@ class DSAJournal():
             else:                       
                 curPage.previous.pointer= None
             
+            self.count -= 1
+    
+    def readCurPage(self):
+        if self.curPage is None:
+            self.curPage = self.head
+
+        return self.curPage.__str__()       
 
     def move2previousPage (self):
         if self.isEmpty():
@@ -140,8 +168,9 @@ class DSAJournal():
         if self.isEmpty():
                 print("Already at last page. Cannot move further!")
         else:
-                curPage = self.pageNum
-                return curPage.pointer 
+                print(self.curPage.__str__())
+                #curPage = self.curPage.previous
+                return curPage
 
 
     def pickleObj(self):

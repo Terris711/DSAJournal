@@ -4,7 +4,7 @@ import pickle
 
 # Create initial journal
 L = DSAJournal()
-for i in range(1,26):
+for i in range(1,10):
     L.insertLastPage(i,"My journal","Anna","Initial content")
 
 print()
@@ -40,9 +40,10 @@ while int(activity) != 3:
                 print(L.unpickleObj())
 
             elif activity == 'b':
-                    L.move2previousPage()
+                    print(L.readCurPage())
             elif activity == 'c':
                     L.move2nextPage()
+                    print(L.readCurPage())
             elif activity == 'd':
                     print()
                     print("Publisher: Curtin College")
@@ -75,7 +76,7 @@ while int(activity) != 3:
 
        while activity != 'g':   
             if activity == 'a':
-                    newJournal = int(input(("Enter new Journal name: "))
+                    newJournal = int(input("Enter new Journal name: "))
 
             elif activity == 'b':
                     newPage = int(input("Enter your page number: "))
