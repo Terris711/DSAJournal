@@ -9,6 +9,7 @@ class DSAJournal():
         self.head = None
         self.tail = None
         self.count = 0
+        self.maxPage = 25
         self.curPage = None
 
         
@@ -18,10 +19,9 @@ class DSAJournal():
 
         curPage = self.head
         while curPage is not None:
-            result += str(curPage.content) + "-->"
+            result += str(curPage.pageNum) + str(curPage.content) + "-->"
             curPage = curPage.pointer
         
-        print()
         return result
 
 
@@ -32,7 +32,7 @@ class DSAJournal():
     def display(self):
         curPage = self.head
         while curPage is not None:
-            print(curPage.content, end = "-->")
+            print(curPage.pageNum, end = "-->")
             curPage = curPage.pointer
         print()
 
@@ -66,6 +66,9 @@ class DSAJournal():
     def insertFirstPage(self, pageNum, title, author, info):
         if self.isEmpty():
             self.head = DSANode(pageNum, title, author, info)
+        
+        elif self.count > self.maxPage:
+            print("Over maximum pages!!!")
 
         else:
             newPage = DSANode(pageNum, title, author, info)
@@ -84,6 +87,10 @@ class DSAJournal():
         if self.head is None:
             newPage.previous = None
             self.head = newPage
+        
+        elif self.count > self.maxPage:
+            print("Over maximum pages!!!")
+
         else: 
             lastPage = self.head
             while lastPage.pointer is not None:
@@ -93,29 +100,45 @@ class DSAJournal():
         self.count += 1
          
     
-    def insertGivenPage(self, prePage, newData, title, author, info):
-        prePage = self.head
-        # Base case
-        if prePage is None:
-                print("This page does not exist!")
-                return
+    def insertGivenPage(self, position, newData, title, author, info):
         
-        # Create a new page + put in data
-        newPage = DSANode(newData, title, author, info)
+        # Base case
+        if self.isEmpty():
+                self.head = self.tail = DSANode(newData, title, author, infor)
+        elif self.count > self.maxPage:
+            print("Over maximum pages!!!")
+        else:
+            
+            temp = self.head
+            while temp is not None:
+                    
+                    if temp.pageNum == position:
 
-        # Make the next of new page as next of prePage
-        newPage.pointer = prePage.pointer
-        # Make next of prePage as newPage
-        prePage.pointer = newPage
-        #newPage.previous = prePage
+                        # Create a new page + put in data
+                        newPage = DSANode(newData, title, author, info)
 
-    # Change previous of newPage's next page
-        if newPage.pointer is not None:
-                newPage.pointer.previous = newPage
+                        # Make the next of new page as next of prePage
+                        newPage.pointer = temp.pointer
+                        # Make next of prePage as newPage
+                        temp.pointer = newPage
+                        #newPage.previous = prePage
 
-        self.count += 1
+        
+                        # Change previous of newPage's next page
+                        if newPage.pointer is not None:
+                            newPage.pointer.previous = newPage
+                    newtemp = temp
+
+                    temp = temp.pointer
+
+                    for i in range (position, 25):
+                        if newtemp.pageNum is not None:
+                           newtemp.pageNum += 1
 
 
+            self.count += 1
+        
+            
     def peekFirst(self):
         return self.head.pageNum
 
@@ -150,6 +173,15 @@ class DSAJournal():
                 curPage.previous.pointer= None
             
             self.count -= 1
+
+
+    def editPage(self, pagePos, title, author, info):
+        curPage = self.head
+        pagePos = DSANode(pagePos, title, author, info)
+        while curPage is not None:
+                if curPage.pageNum == pagePos.pageNum:
+                        curPage.content = pagePos.content
+                curPage = curPage.pointer
     
     def readCurPage(self):
         if self.curPage is None:
@@ -161,24 +193,20 @@ class DSAJournal():
         if self.isEmpty():
                 print("Already at first page. Cannot move further!")
         else:
-                curPage = self.pageNum
-                return curPage.previous    
+                self.curPage = self.curPage.previous   
     
     def move2nextPage (self):
         if self.isEmpty():
                 print("Already at last page. Cannot move further!")
         else:
-                print(self.curPage.__str__())
-                #curPage = self.curPage.previous
-                return curPage
+                self.curPage = self.curPage.pointer
 
-
-    def pickleObj(self):
+    def pickleObj(self, filename):
         
         print("Saving Journal to file ....")
         
         try:
-            with open("myJournal.pkl", "wb") as f:
+            with open(filename, "wb") as f:
                 pickle.dump(self, f)
             f.close()
         except IOError:
@@ -187,9 +215,9 @@ class DSAJournal():
 
 
     
-    def unpickleObj(self):
+    def unpickleObj(self, filename):
         try:
-            with open("myJournal.pkl", "rb") as f:
+            with open(filename, "rb") as f:
                 Journal = pickle.load(f)
             f.close()
         except IOError:

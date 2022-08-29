@@ -1,18 +1,15 @@
 from Journal import DSAJournal
 from page import page
 import pickle
+import os
 
-# Create initial journal
-L = DSAJournal()
-for i in range(1,10):
-    L.insertLastPage(i,"My journal","Anna","Initial content")
 
-print()
-# Save Journal to a pickle file
-L.pickleObj()
 print()
 
 print("Assignment 1 - MINI PROJECT")
+
+print("***Note: To get started reading the journal. You have to go for option 2.a first which creating the Journal first! ")
+
 print()
 
 print("1. Read journal")
@@ -37,17 +34,20 @@ while int(activity) != 3:
             if activity == 'a':
                 
                 # Unpickling file
-                print(L.unpickleObj())
+                L.unpickleObj(filename)
+                print(L.readCurPage())
 
             elif activity == 'b':
+                    L.move2nextPage()
                     print(L.readCurPage())
             elif activity == 'c':
-                    L.move2nextPage()
+                    L.move2previousPage()
                     print(L.readCurPage())
             elif activity == 'd':
                     print()
                     print("Publisher: Curtin College")
                     print("Author: Thi Van Anh Duong")
+                    print("Discipline: Information Technology")
                     print("Published Date: 28 Aug 2022") 
                     print("I hope you have fun <3")
                     print()
@@ -62,6 +62,7 @@ while int(activity) != 3:
             print("     e. Exit")
 
             activity = input("Enter your option: ")
+            os.system('clear')
             
 
     elif int(activity) == 2:
@@ -70,14 +71,25 @@ while int(activity) != 3:
        print("     b. Add new page as last page")
        print("     c. Add new page as first page")
        print("     d. Add in after a page number")
-       print("     e. Edit existing pages")
-       print("     f. Store updated journal")
-       print("     g. Exit")
+       print("     e. Remove first page")
+       print("     f. Remove last page")
+       print("     g. Edit existing pages")
+       print("     h. Store updated journal")
+       print("     i. Exit")
 
-       while activity != 'g':   
+       while activity != 'i':   
             if activity == 'a':
-                    newJournal = int(input("Enter new Journal name: "))
+                    L = DSAJournal()
+                    
+                    # Initialize some pages for testing purpose!
+                    for i in range(1,26):
+                        L.insertLastPage(i,"My journal","Anna","Initial content")
 
+                    # Save Journal to a pickle file
+                    filename = input("Enter your file name (with *.pkl): ")
+                    L.pickleObj(filename)
+
+                    
             elif activity == 'b':
                     newPage = int(input("Enter your page number: "))
                     title = input("Enter your title: ")
@@ -126,11 +138,43 @@ while int(activity) != 3:
                     print("Your current journal: ")
                     L.display()
                     print()
+            
 
             elif activity == 'e':
-                    print('e')
+                    L.removeFirstPage()
+                    print()
+                    print("You deleted first page!")
+                    print()
+
+                    print("Your current journal: ")
+                    L.display()
+                    print()
+
+
             elif activity == 'f':
-                    print('f')
+                    L.removeLastPage()
+                    print()
+                    print("You deleted last page!")
+                    print()
+
+                    print("Your current journal: ")
+                    L.display()
+                    print()
+
+            elif activity == 'g':
+                    position = int(input("Enter page you wanna edit: "))
+                    title = input("Enter new title: ")
+                    author = input("Enter new author: ")
+                    info = input("Enter new information: ")
+                    L.editPage(position, title, author, info)
+
+                    print()
+                    print("Your new page now: ")
+                    print(L.displayPage(position))
+                    print()
+            elif activity == 'h':
+                    L.pickleObj(filename)
+
             else:
                 print("Please enter a valid option!")
             
@@ -138,11 +182,13 @@ while int(activity) != 3:
             print("     b. Add new page as last page")
             print("     c. Add new page as first page")
             print("     d. Add in after a page number")
-            print("     e. Edit existing pages")
-            print("     f. Store updated journal")
-            print("     g. Exit")
+            print("     e. Remove first page")
+            print("     f. Remove last page")
+            print("     g. Edit existing pages")
+            print("     h. Store updated journal")
+            print("     i. Exit")
             activity = input("Enter your option: ")
-            
+            os.system('clear')
 
                      
     else:
@@ -156,7 +202,7 @@ while int(activity) != 3:
     print("3. Exit")
     print()
     activity = input("Enter your option: ")
-    
+    os.system('clear')
 
 
 
